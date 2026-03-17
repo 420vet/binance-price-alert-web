@@ -4,7 +4,7 @@
   "description": "Real-time Binance price spike alerts — pure frontend, no backend",
   "type": "module",
   "bin": {
-    "binance-price-alert-web": "./bin/serve.cjs"
+    "binance-price-alert-web": "bin/serve.cjs"
   },
   "files": [
     "dist",
