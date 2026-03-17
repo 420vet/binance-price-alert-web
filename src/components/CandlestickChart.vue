@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { Loader2 } from 'lucide-vue-next'
 import { useStore } from '../composables/useStore.js'
 import { fetchKlines } from '../composables/useBinanceREST.js'
 import { TIMEFRAMES } from '../utils/constants.js'
@@ -304,9 +305,10 @@ onUnmounted(() => {
     <div class="relative flex-1">
       <div
         v-if="loading"
-        class="absolute inset-0 flex items-center justify-center text-[var(--color-text-muted)] text-sm z-10"
+        class="absolute inset-0 flex items-center justify-center gap-2 text-[var(--color-text-muted)] text-sm z-10"
       >
-        <span class="animate-spin mr-2">⟳</span> {{ store.t.value.loading }}
+        <Loader2 class="w-4 h-4 animate-spin" />
+        {{ store.t.value.loading }}
       </div>
       <div
         v-if="!symbol"

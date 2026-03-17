@@ -214,11 +214,11 @@ const translations = {
 }
 
 export const LANGUAGES = [
-  { code: 'en', label: 'English' },
-  { code: 'es', label: 'Español' },
-  { code: 'fr', label: 'Français' },
-  { code: 'it', label: 'Italiano' },
-  { code: 'zh', label: '中文' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'fr', label: 'Français', flag: '🇫🇷' },
+  { code: 'it', label: 'Italiano', flag: '🇮🇹' },
+  { code: 'zh', label: '中文', flag: '🇨🇳' },
 ]
 
 export function useI18n(settings) {

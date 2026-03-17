@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -23,12 +24,14 @@
   --color-light-text-primary: #1a1a2e;
   --color-light-text-secondary: #5555778;
 
-  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --font-mono: "Share Tech Mono", "JetBrains Mono", "Fira Code", monospace;
 }
 
 /* Base */
 * {
   box-sizing: border-box;
+  /* Retro flat — no rounded corners anywhere */
+  border-radius: 0 !important;
 }
 
 html {
@@ -83,4 +86,39 @@ body {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(8px);
+}
+
+/* Underline input — used in Settings sliders */
+.underline-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--color-surface-border);
+  outline: none;
+  padding: 1px 2px 3px;
+  color: var(--color-neon);
+  font-family: var(--font-mono);
+  font-size: inherit;
+  text-align: right;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  /* Remove number spinners */
+  -moz-appearance: textfield;
+}
+.underline-input::-webkit-outer-spin-button,
+.underline-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.underline-input:focus {
+  border-bottom-color: var(--color-neon);
+  box-shadow: 0 1px 0 0 var(--color-neon);
+}
+html.light .underline-input {
+  border-bottom-color: var(--color-light-border);
+  color: var(--color-neon);
+}
+html.light .underline-input:focus {
+  border-bottom-color: var(--color-neon);
+  box-shadow: 0 1px 0 0 var(--color-neon);
 }

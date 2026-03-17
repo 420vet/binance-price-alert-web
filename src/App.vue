@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { createStore, provideStore } from './composables/useStore.js'
 import AppHeader from './components/AppHeader.vue'
+import AppFooter from './components/AppFooter.vue'
 import PriceTable from './components/PriceTable.vue'
 import CandlestickChart from './components/CandlestickChart.vue'
 import AlertsPanel from './components/AlertsPanel.vue'
@@ -31,7 +32,6 @@ onMounted(() => {
 <template>
   <div
     class="min-h-screen flex flex-col"
-    :style="{ fontSize: store.settings.fontSize + 'px' }"
     :class="store.theme.value === 'dark' ? 'bg-[var(--color-surface-base)] text-[var(--color-text-primary)]' : 'bg-[var(--color-light-base)] text-[var(--color-light-text-primary)]'"
   >
     <AppHeader
@@ -56,6 +56,8 @@ onMounted(() => {
         </div>
       </div>
     </main>
+
+    <AppFooter />
 
     <Transition name="fade">
       <SettingsModal

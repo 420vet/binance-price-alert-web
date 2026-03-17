@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { TrendingUp, TrendingDown } from 'lucide-vue-next'
 import { formatPrice, formatPercent, formatTime } from '../utils/formatters.js'
 import { useStore } from '../composables/useStore.js'
 import { CRYPTO_ICON_BASE } from '../utils/constants.js'
@@ -9,7 +10,6 @@ const props = defineProps({
 })
 const store = useStore()
 
-const dirIcon = computed(() => (props.alert.direction === 'up' ? '🚀' : '📉'))
 const pctClass = computed(() =>
   props.alert.direction === 'up' ? 'text-[var(--color-green)]' : 'text-[var(--color-spike)]'
 )
@@ -33,7 +33,16 @@ const iconUrl = computed(
         class="w-5 h-5 rounded-full"
         @error="$event.target.style.display = 'none'"
       >
-      <span>{{ dirIcon }}</span>
+      <TrendingUp
+        v-if="alert.direction === 'up'"
+        class="w-3.5 h-3.5 text-[var(--color-green)]"
+        :stroke-width="2.5"
+      />
+      <TrendingDown
+        v-else
+        class="w-3.5 h-3.5 text-[var(--color-spike)]"
+        :stroke-width="2.5"
+      />
     </div>
 
     <!-- Content -->

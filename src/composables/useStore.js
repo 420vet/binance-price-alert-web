@@ -12,7 +12,7 @@ export function createStore() {
   const { settings, updateSetting, resetToDefaults } = useSettings()
   const { theme, toggleTheme, initTheme } = useTheme()
   const { t } = useI18n(settings)
-  const { trackPrice, resetAll: resetTracker } = usePriceTracker()
+  const { trackPrice, resetAll: resetTracker, pctMap } = usePriceTracker()
   const alerts = useAlerts()
   const ws = useBinanceWS()
 
@@ -27,12 +27,21 @@ export function createStore() {
     null // kline callback handled in CandlestickChart directly
   )
 
-  // Initialize WebSocket with current symbols
   async function init() {
     initTheme()
+    // Apply saved font size to html element so rem-based Tailwind classes scale
+    document.documentElement.style.fontSize = settings.fontSize + 'px'
     await ws.bootstrap()
     ws.updateSymbols(settings.symbols)
   }
+
+  // Keep font size on html in sync with settings
+  watch(
+    () => settings.fontSize,
+    (size) => {
+      document.documentElement.style.fontSize = size + 'px'
+    }
+  )
 
   // Re-connect when symbols change
   watch(
@@ -51,6 +60,7 @@ export function createStore() {
     t,
     alerts,
     ws,
+    pctMap,
     resetTracker,
     init,
   }

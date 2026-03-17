@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { Plus, X, Loader2 } from 'lucide-vue-next'
 import { useStore } from '../composables/useStore.js'
 import { validateSymbol } from '../composables/useBinanceREST.js'
 
@@ -59,12 +60,18 @@ function onKeydown(e) {
           ? 'border-[var(--color-surface-border)]'
           : 'border-[var(--color-light-border)]'"
       >
-        <span class="font-bold">➕ {{ store.t.value.addToken }}</span>
+        <span class="flex items-center gap-2 font-bold">
+          <Plus
+            class="w-4 h-4 text-[var(--color-neon)]"
+            :stroke-width="2.5"
+          />
+          {{ store.t.value.addToken }}
+        </span>
         <button
-          class="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+          class="p-1 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
           @click="emit('close')"
         >
-          ✕
+          <X class="w-4 h-4" />
         </button>
       </div>
 
@@ -117,14 +124,14 @@ function onKeydown(e) {
           {{ store.t.value.cancel }}
         </button>
         <button
-          class="px-4 py-2 rounded text-sm font-medium bg-[var(--color-neon)] text-black hover:bg-[var(--color-neon)]/80 transition-colors disabled:opacity-50 flex items-center gap-2"
+          class="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium bg-[var(--color-neon)] text-black hover:bg-[var(--color-neon)]/80 transition-colors disabled:opacity-50"
           :disabled="!input.trim() || loading"
           @click="addSymbol"
         >
-          <span
+          <Loader2
             v-if="loading"
-            class="animate-spin"
-          >⟳</span>
+            class="w-3.5 h-3.5 animate-spin"
+          />
           {{ store.t.value.addSymbol }}
         </button>
       </div>

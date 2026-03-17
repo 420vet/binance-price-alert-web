@@ -1,13 +1,17 @@
 <script setup>
 import { reactive } from 'vue'
+import { Settings, X, Check } from 'lucide-vue-next'
 import { useStore } from '../composables/useStore.js'
 import { LANGUAGES } from '../composables/useI18n.js'
+import SelectDropdown from './SelectDropdown.vue'
 
 const store = useStore()
 const emit = defineEmits(['close'])
 
 // Local copy for editing
 const local = reactive({ ...store.settings })
+
+const langOptions = LANGUAGES.map((l) => ({ value: l.code, label: l.label, flag: l.flag }))
 
 function save() {
   for (const key of Object.keys(local)) {
@@ -19,6 +23,13 @@ function save() {
 function reset() {
   store.resetToDefaults()
   Object.assign(local, store.settings)
+}
+
+// Clamp number inputs to their allowed ranges on blur
+function clamp(key, min, max) {
+  const v = Number(local[key])
+  if (isNaN(v)) { local[key] = min; return }
+  local[key] = Math.min(max, Math.max(min, v))
 }
 </script>
 
@@ -42,19 +53,22 @@ function reset() {
           ? 'border-[var(--color-surface-border)]'
           : 'border-[var(--color-light-border)]'"
       >
-        <span class="font-bold">⚙️ {{ store.t.value.settings }}</span>
+        <span class="flex items-center gap-2 font-bold">
+          <Settings class="w-4 h-4 text-[var(--color-neon)]" />
+          {{ store.t.value.settings }}
+        </span>
         <button
-          class="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+          class="p-1 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
           @click="emit('close')"
         >
-          ✕
+          <X class="w-4 h-4" />
         </button>
       </div>
 
       <!-- Body -->
       <div class="px-5 py-4 space-y-5">
         <!-- Threshold -->
-        <label class="block">
+        <div>
           <span class="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide">
             {{ store.t.value.threshold }}
           </span>
@@ -67,14 +81,21 @@ function reset() {
               step="0.1"
               class="flex-1 accent-[var(--color-neon)]"
             >
-            <span class="text-[var(--color-neon)] font-mono w-14 text-right">
-              {{ local.threshold.toFixed(1) }}%
-            </span>
+            <input
+              v-model.number="local.threshold"
+              type="number"
+              min="0.1"
+              max="10"
+              step="0.1"
+              class="underline-input w-14"
+              @blur="clamp('threshold', 0.1, 10)"
+            >
+            <span class="text-[var(--color-text-secondary)] text-xs w-3">%</span>
           </div>
-        </label>
+        </div>
 
         <!-- Window -->
-        <label class="block">
+        <div>
           <span class="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide">
             {{ store.t.value.windowMin }}
           </span>
@@ -87,14 +108,21 @@ function reset() {
               step="1"
               class="flex-1 accent-[var(--color-neon)]"
             >
-            <span class="text-[var(--color-neon)] font-mono w-14 text-right">
-              {{ local.windowMin }}m
-            </span>
+            <input
+              v-model.number="local.windowMin"
+              type="number"
+              min="1"
+              max="60"
+              step="1"
+              class="underline-input w-14"
+              @blur="clamp('windowMin', 1, 60)"
+            >
+            <span class="text-[var(--color-text-secondary)] text-xs w-3">m</span>
           </div>
-        </label>
+        </div>
 
         <!-- Reset Hour -->
-        <label class="block">
+        <div>
           <span class="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide">
             {{ store.t.value.resetHour }}
           </span>
@@ -107,14 +135,21 @@ function reset() {
               step="1"
               class="flex-1 accent-[var(--color-neon)]"
             >
-            <span class="text-[var(--color-neon)] font-mono w-14 text-right">
-              {{ String(local.resetHour).padStart(2, '0') }}:00
-            </span>
+            <input
+              v-model.number="local.resetHour"
+              type="number"
+              min="0"
+              max="23"
+              step="1"
+              class="underline-input w-14"
+              @blur="clamp('resetHour', 0, 23)"
+            >
+            <span class="text-[var(--color-text-secondary)] text-xs w-3">h</span>
           </div>
-        </label>
+        </div>
 
         <!-- Font Size -->
-        <label class="block">
+        <div>
           <span class="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide">
             {{ store.t.value.fontSize }}
           </span>
@@ -127,33 +162,29 @@ function reset() {
               step="1"
               class="flex-1 accent-[var(--color-neon)]"
             >
-            <span class="text-[var(--color-neon)] font-mono w-14 text-right">
-              {{ local.fontSize }}px
-            </span>
+            <input
+              v-model.number="local.fontSize"
+              type="number"
+              min="11"
+              max="18"
+              step="1"
+              class="underline-input w-14"
+              @blur="clamp('fontSize', 11, 18)"
+            >
+            <span class="text-[var(--color-text-secondary)] text-xs w-3">px</span>
           </div>
-        </label>
+        </div>
 
         <!-- Language -->
-        <label class="block">
-          <span class="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide">
+        <div>
+          <span class="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide block mb-1.5">
             {{ store.t.value.language }}
           </span>
-          <select
+          <SelectDropdown
             v-model="local.language"
-            class="mt-1.5 w-full px-3 py-2 rounded border font-mono text-sm bg-transparent"
-            :class="store.theme.value === 'dark'
-              ? 'border-[var(--color-surface-border)] text-[var(--color-text-primary)]'
-              : 'border-[var(--color-light-border)] text-[var(--color-light-text-primary)]'"
-          >
-            <option
-              v-for="lang in LANGUAGES"
-              :key="lang.code"
-              :value="lang.code"
-            >
-              {{ lang.label }}
-            </option>
-          </select>
-        </label>
+            :options="langOptions"
+          />
+        </div>
 
         <!-- Notifications -->
         <div>
@@ -162,10 +193,15 @@ function reset() {
           </span>
           <div class="mt-1.5 flex items-center gap-3">
             <span
-              class="text-xs"
+              class="flex items-center gap-1.5 text-xs"
               :class="store.alerts.notifEnabled.value ? 'text-[var(--color-green)]' : 'text-[var(--color-text-muted)]'"
             >
-              {{ store.alerts.notifEnabled.value ? '✓ Granted' : '✗ Not granted' }}
+              <Check
+                v-if="store.alerts.notifEnabled.value"
+                class="w-3 h-3"
+                :stroke-width="2.5"
+              />
+              {{ store.alerts.notifEnabled.value ? 'Granted' : 'Not granted' }}
             </span>
             <button
               v-if="!store.alerts.notifEnabled.value"

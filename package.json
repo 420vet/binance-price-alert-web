@@ -36,5 +36,8 @@
     "trading",
     "websocket"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "lucide-vue-next": "^0.577.0"
+  }
 }

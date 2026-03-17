@@ -1,4 +1,5 @@
 <script setup>
+import { BellRing, Volume2, VolumeX, X } from 'lucide-vue-next'
 import { useStore } from '../composables/useStore.js'
 import AlertItem from './AlertItem.vue'
 
@@ -20,11 +21,15 @@ const alerts = store.alerts
         ? 'border-[var(--color-surface-border)]'
         : 'border-[var(--color-light-border)]'"
     >
-      <span class="font-bold text-xs uppercase tracking-wide text-[var(--color-spike)]">
-        🚨 {{ store.t.value.alerts }}
+      <span class="flex items-center gap-1.5 font-bold text-xs uppercase tracking-wide text-[var(--color-spike)]">
+        <BellRing
+          class="w-3.5 h-3.5"
+          :stroke-width="2.5"
+        />
+        {{ store.t.value.alerts }}
         <span
           v-if="alerts.alerts.value.length"
-          class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--color-spike)]/20"
+          class="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--color-spike)]/20"
         >
           {{ alerts.alerts.value.length }}
         </span>
@@ -33,24 +38,31 @@ const alerts = store.alerts
       <div class="flex items-center gap-2">
         <!-- Audio toggle -->
         <button
-          class="text-xs px-1.5 py-0.5 rounded transition-colors"
+          class="p-1 rounded transition-colors"
           :class="alerts.audioEnabled.value
             ? 'text-[var(--color-green)]'
             : 'text-[var(--color-text-muted)]'"
           :title="store.t.value.enableAudio"
           @click="alerts.toggleAudio()"
         >
-          {{ alerts.audioEnabled.value ? '🔊' : '🔇' }}
+          <Volume2
+            v-if="alerts.audioEnabled.value"
+            class="w-3.5 h-3.5"
+          />
+          <VolumeX
+            v-else
+            class="w-3.5 h-3.5"
+          />
         </button>
 
         <!-- Clear -->
         <button
           v-if="alerts.alerts.value.length"
-          class="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-spike)] transition-colors"
+          class="p-1 rounded text-[var(--color-text-muted)] hover:text-[var(--color-spike)] transition-colors"
           :title="store.t.value.clearAlerts"
           @click="alerts.clearAlerts()"
         >
-          ✕
+          <X class="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
