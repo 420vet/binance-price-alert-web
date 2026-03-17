@@ -27,26 +27,19 @@ async function loadKlines() {
   loading.value = true
   try {
     candles.value = await fetchKlines(props.symbol, interval.value, 200)
-    // Subscribe to live kline updates
+    // Subscribe to live kline updates — setKlineCallback only, never overwrite ticker
     store.ws.selectKline(props.symbol, interval.value)
-    store.ws.setCallbacks(
-      // Keep existing ticker callback
-      (_sym, _price) => {
-        // ticker updates handled in useStore
-      },
-      (candle) => {
-        if (!candles.value.length) return
-        const last = candles.value[candles.value.length - 1]
-        if (candle.openTime === last.openTime) {
-          // Update last candle
-          candles.value[candles.value.length - 1] = { ...last, ...candle }
-        } else if (candle.openTime > last.openTime) {
-          candles.value.push(candle)
-          if (candles.value.length > 300) candles.value.shift()
-        }
-        draw()
+    store.ws.setKlineCallback((candle) => {
+      if (!candles.value.length) return
+      const last = candles.value[candles.value.length - 1]
+      if (candle.openTime === last.openTime) {
+        candles.value[candles.value.length - 1] = { ...last, ...candle }
+      } else if (candle.openTime > last.openTime) {
+        candles.value.push(candle)
+        if (candles.value.length > 300) candles.value.shift()
       }
-    )
+      draw()
+    })
   } catch (e) {
     console.error('Failed to load klines:', e)
   } finally {

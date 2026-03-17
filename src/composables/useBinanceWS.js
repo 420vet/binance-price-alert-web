@@ -151,8 +151,13 @@ export function useBinanceWS() {
   }
 
   function setCallbacks(tickerCb, klineCb) {
-    onTickerUpdate = tickerCb
-    onKlineUpdate = klineCb
+    if (tickerCb !== null) onTickerUpdate = tickerCb
+    if (klineCb !== null) onKlineUpdate = klineCb
+  }
+
+  // Set only the kline callback without touching the ticker callback
+  function setKlineCallback(cb) {
+    onKlineUpdate = cb
   }
 
   function disconnect() {
@@ -174,6 +179,7 @@ export function useBinanceWS() {
     updateSymbols,
     selectKline,
     setCallbacks,
+    setKlineCallback,
     disconnect,
   }
 }
