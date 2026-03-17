@@ -1,6 +1,6 @@
 {
   "name": "binance-price-alert-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Real-time Binance price spike alerts — pure frontend, no backend",
   "type": "module",
   "bin": {
