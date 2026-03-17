@@ -1,0 +1,40 @@
+{
+  "name": "binance-price-alert-web",
+  "version": "1.0.0",
+  "description": "Real-time Binance price spike alerts — pure frontend, no backend",
+  "type": "module",
+  "bin": {
+    "binance-price-alert-web": "./bin/serve.cjs"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src",
+    "format": "prettier --write src"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@tailwindcss/vite": "^4.2.1",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-vue": "^9.33.0",
+    "globals": "^15.15.0",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^4.2.1",
+    "vite": "^5.4.21",
+    "vue": "^3.5.13"
+  },
+  "keywords": [
+    "binance",
+    "crypto",
+    "price-alert",
+    "trading",
+    "websocket"
+  ],
+  "license": "MIT"
+}
